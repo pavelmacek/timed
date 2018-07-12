@@ -8,6 +8,7 @@ class App extends Component {
       <div className="App">
         <div className="Content">
           <h1>00:00</h1>
+          <button type="button" className="Btn">Start</button>
         </div>
       </div>
     );

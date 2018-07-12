@@ -1,17 +1,21 @@
 .App {
   text-align: center;
   font-family: 'Roboto Mono', monospace;
+  color: #4f4f4f;
 }
 
 h1 {
     font-weight: 300;
+    font-size: 3rem;
 }
 
 .Content {
     display: flex;
     flex-direction: column;
+    align-items: center;
     justify-content: center;
     height: 100vh;
+    text-align: center;
 }
 
 .Btn {
@@ -21,10 +25,9 @@ h1 {
   border: 1px solid #e0e0e0;
   border-radius: 10rem;
   padding: 1rem 1rem;
-  width: auto;
-}
-
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  width: 10rem;
+  color: #4f4f4f;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 1.5rem;
+  font-weight: 300;
 }
