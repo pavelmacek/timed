@@ -7,6 +7,7 @@
 h1 {
     font-weight: 300;
     font-size: 3rem;
+    -webkit-app-region: no-drag;
 }
 
 .Content {

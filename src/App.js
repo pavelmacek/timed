@@ -2,40 +2,49 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import './App.css';
 
-var seconds = 0, minutes = 0, hours = 0,t, time = "00:00";
-
 // Cointainer component
 class App extends Component {
   constructor (props) {
     super(props);
-    this.state = { time: '00:00', running: false };
+    this.state = { time: {hours: '00', minutes: '00', seconds: '00'}, running: false, seconds: 0, t: {}};
     this.add = this.add.bind(this);
     this.timer = this.timer.bind(this);
     this.onButtonClick = this.onButtonClick.bind(this);
+    this.secondsToTime = this.secondsToTime.bind(this);
   }
-  add() { // Instead of using this method and keep time in h m s, I should keep time in seconds and ++ after 1s, and always just calculate time to display with a separate secondsToTime function https://stackoverflow.com/questions/40885923/countdown-timer-in-react
+  add() {
+      let seconds = this.state.seconds;
       seconds++;
-      if (seconds >= 60) {
-          seconds = 0;
-          minutes++;
-          if (minutes >= 60) {
-              minutes = 0;
-              hours++;
-          }
-      }
-
-      time = (hours ? (hours > 9 ? hours : "0" + hours + ":") : "") + (minutes ? (minutes > 9 ? minutes : "0" + minutes) : "00") + ":" + (seconds > 9 ? seconds : "0" + seconds);
-
+      this.setState({seconds: seconds});
+      console.log(seconds);
+      this.setState({time: this.secondsToTime(seconds)});
+      console.log(this.state.time);
       this.timer();
   }
+  secondsToTime(secs){
+    let hours = Math.floor(secs / (60 * 60));
+
+    let divisor_for_minutes = secs % (60 * 60);
+    let minutes = Math.floor(divisor_for_minutes / 60);
+
+    let divisor_for_seconds = divisor_for_minutes % 60;
+    let seconds = Math.ceil(divisor_for_seconds);
+
+    let timeObj = {
+        "hours": (hours ? (hours > 9 ? hours : "0" + hours + ":") : "00"),
+        "minutes": (minutes ? (minutes > 9 ? minutes : "0" + minutes) : "00"),
+        "seconds": (seconds > 9 ? seconds : "0" + seconds)
+    };
+    return timeObj;
+  };
   timer() {
-      t = setTimeout(this.add, 1000);
-      this.setState({ time: time, running: true})
-      console.log(time);
+      this.setState({t: setTimeout(this.add, 1000)});
+      this.setState({ running: true})
+
   }
   onButtonClick() {
     if (this.state.running) {
-      clearTimeout(t);
+      clearTimeout(this.state.t);
       this.setState({ running: false})
     } else {
     this.timer();
@@ -45,7 +54,7 @@ class App extends Component {
     return (
       <div className="App">
         <div className="Content">
-          <h1>{this.state.time}</h1>
+          <h1>{this.state.time.hours == '00' ? '' : this.state.time.hours+':'}{this.state.time.minutes}:{this.state.time.seconds}</h1>
           <button onClick={this.onButtonClick} type="button" className="Btn">{this.state.running ? 'Pause' : 'Start'}</button>
         </div>
       </div>
