@@ -2,16 +2,31 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import './App.css';
 
+console.log(localStorage);
+
 // Cointainer component
 class App extends Component {
   constructor (props) {
     super(props);
-    this.state = { time: {hours: '00', minutes: '00', seconds: '00'}, running: false, seconds: 0, t: {}};
+    this.state = { time: {hours: '00', minutes: '00', seconds: '00'}, running: false, seconds: 0, t: {} };
+
     this.add = this.add.bind(this);
     this.timer = this.timer.bind(this);
     this.secondsToTime = this.secondsToTime.bind(this);
     this.controlTimer = this.controlTimer.bind(this);
     this.newTimer = this.newTimer.bind(this);
+  }
+  componentDidMount() {
+    if (localStorage.getItem('time')) {
+      console.log('after mounted', localStorage.getItem('time'));
+      let time = JSON.parse(localStorage.getItem('time'));
+      this.setState({time: time});
+    }
+    if (localStorage.getItem('seconds')) {
+      console.log('after mounted', localStorage.getItem('seconds'));
+      let seconds = localStorage.getItem('seconds');
+      this.setState({seconds: seconds});
+    }
   }
   add() {
       let seconds = this.state.seconds;
@@ -21,6 +36,9 @@ class App extends Component {
 
       this.setState({time: this.secondsToTime(seconds)});
       console.log(this.state.time);
+
+      localStorage.setItem('time', JSON.stringify(this.state.time));
+      localStorage.setItem('seconds', this.state.seconds);
 
       this.timer();
   }
@@ -41,22 +59,24 @@ class App extends Component {
     return timeObj;
   };
   timer() {
-      this.setState({t: setTimeout(this.add, 1000)});
-      this.setState({ running: true})
+      this.setState({ t: setTimeout(this.add, 1000) });
+      this.setState({ running: true })
 
   }
   controlTimer() {
     if (this.state.running) {
       clearTimeout(this.state.t);
-      this.setState({ running: false})
+      this.setState({ running: false })
     } else {
     this.timer();
     }
   }
   newTimer() {
-    this.setState({seconds: 0});
-    this.setState({time: {hours: '00', minutes: '00', seconds: '00'}});
-  }
+    this.setState({ seconds: 0 });
+    this.setState({ time: { hours: '00', minutes: '00', seconds: '00'} });
+    localStorage.setItem('seconds', '0');
+    localStorage.setItem('time', JSON.stringify({ hours: '00', minutes: '00', seconds: '00'} ));
+  }''
   render() {
     return (
       <div className="app">
