@@ -8,7 +8,7 @@ console.log(localStorage);
 class App extends Component {
   constructor (props) {
     super(props);
-    this.state = { time: {hours: '00', minutes: '00', seconds: '00'}, running: false, seconds: 0, t: {} };
+    this.state = { time: {hours: '00', minutes: '00', seconds: '00'}, running: false, seconds: 0, t: {}, appVisibility: '' };
 
     this.add = this.add.bind(this);
     this.timer = this.timer.bind(this);
@@ -27,6 +27,13 @@ class App extends Component {
       let seconds = localStorage.getItem('seconds');
       this.setState({seconds: seconds});
     }
+
+    // Show App with transition
+    this.setState({appVisibility: 'show'});
+  }
+  componentWillUnmount() {
+    // Hide App with transition
+    this.setState({appVisibility: ''});
   }
   add() {
       let seconds = this.state.seconds;
@@ -52,7 +59,7 @@ class App extends Component {
     let seconds = Math.ceil(divisor_for_seconds);
 
     let timeObj = {
-        "hours": (hours ? (hours > 9 ? hours : "0" + hours + ":") : "00"),
+        "hours": (hours ? (hours > 9 ? hours : "0" + hours) : "00"),
         "minutes": (minutes ? (minutes > 9 ? minutes : "0" + minutes) : "00"),
         "seconds": (seconds > 9 ? seconds : "0" + seconds)
     };
@@ -79,7 +86,7 @@ class App extends Component {
   }''
   render() {
     return (
-      <div className="app">
+      <div className={'app ' + this.state.appVisibility}>
         <div className="content">
           <h1>{this.state.time.hours == '00' ? '' : this.state.time.hours+':'}{this.state.time.minutes}:{this.state.time.seconds}</h1>
           <button onClick={this.controlTimer} type="button" className="btn">{this.state.running ? 'Pause' : 'Start'}</button>
